@@ -1,0 +1,38 @@
+---
+description: Conventions for the KGA arcade project - adding games, routing, and structure
+alwaysApply: true
+---
+
+# KGA Arcade Game Conventions
+
+This project is a static arcade with standalone game pages. Each student's game is a self-contained page.
+
+## Adding a New Game
+
+1. **Registry**: Add an entry to [src/games.ts](src/games.ts) with: `name`, `grade`, `teacher`, `emoji`, `slug`
+2. **Route**: Create [src/routes/games/<slug>.tsx](src/routes/games/) - the file name must match the slug
+
+## Game Structure
+
+- Games are self-contained. No shared game state.
+- Use `localStorage` for any state that needs to persist (scores, progress, etc.)
+- Use existing shadcn/ui components from [src/components/ui/](src/components/ui/)
+- No dynamic/server-side features - everything is statically built
+
+## Example Entry
+
+```typescript
+{
+  name: 'Adele',
+  grade: '4th',
+  teacher: 'Mrs. Studioso',
+  emoji: '🐵',
+  slug: 'adele',
+}
+```
+
+## Routing
+
+- Home page: `/` - card grid linking to all games
+- Game pages: `/games/<slug>` - each game at its own URL
+- Layout: All games share a layout with "Back to Home" link

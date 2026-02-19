@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+        env:
+          GITHUB_PAGES: "true"
+      - run: touch dist/client/.nojekyll
+      - run: |
+          echo '<!DOCTYPE html><html><head><meta charset="utf-8"><script>sessionStorage.redirect=location.href;</script><meta http-equiv="refresh" content="0;URL='\''/kga-tech-night-2026/'\''"></meta></head><body>Redirecting...</body></html>' > dist/client/404.html
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist/client
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+      - uses: actions/deploy-pages@v4
